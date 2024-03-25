@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+//Script to load to rocket so that it can process different types of collisions
 public class CollisionHandler : MonoBehaviour
 {
 
@@ -28,6 +29,8 @@ public class CollisionHandler : MonoBehaviour
         processDebugKeys();
     }
 
+    //Keys used for easily debugging different parts of the game. 
+    //Would remove/hide this for production
     private void processDebugKeys()
     {
         if (Input.GetKeyDown(KeyCode.L))
@@ -40,6 +43,8 @@ public class CollisionHandler : MonoBehaviour
         }
     }
 
+    //If the rocket is still eligible for collisions then
+    //check which type of collision and handle appropratiely
     void OnCollisionEnter(Collision other) 
     {
         if(!isTransitioning && !collisionDisable)
@@ -61,8 +66,10 @@ public class CollisionHandler : MonoBehaviour
         }
     }
 
+    //Handle crash
     IEnumerator CrashSequence()
     {
+        //Once it is entering this state we don't want it to trigger other collisions
         isTransitioning = true;
         GetComponent<Movement>().enabled = false;
         explosionParticles.Play();
@@ -72,8 +79,10 @@ public class CollisionHandler : MonoBehaviour
         ReloadLevel();
     }
 
+    //Handle successful landing
     IEnumerator FinishSequence()
     {
+        //Once it is entering this state we don't want it to trigger other collisions
         isTransitioning = true;
         GetComponent<Movement>().enabled = false;
         sucessParticles.Play();
@@ -83,12 +92,17 @@ public class CollisionHandler : MonoBehaviour
         LoadNextLevel();
     }
 
+
+/* Should move these to a separate script handling level loads and trigger using events
+*/
+    //Loads current level on fail
     void ReloadLevel()
     {
         int currSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currSceneIndex);
     }
 
+    //Loads next level on success. 
     void LoadNextLevel()
     {
         int currSceneIndex = SceneManager.GetActiveScene().buildIndex;

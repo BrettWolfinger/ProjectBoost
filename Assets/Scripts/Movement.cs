@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Script to handle movement of the player character (uses key codes
+//instead of unity input system)
 public class Movement : MonoBehaviour
 {
 
@@ -29,6 +31,7 @@ public class Movement : MonoBehaviour
         ProcessRotation();
     }
 
+    //Continually thrust until keycode is released
     void ProcessThrust()
     {
         if(Input.GetKey(KeyCode.Space))
@@ -41,6 +44,8 @@ public class Movement : MonoBehaviour
         }
     }
 
+    //Allow side boosters to steer rocket. 
+    // because this is an if else, Rotate left will always dominate rotate right
     void ProcessRotation()
     {
         if(Input.GetKey(KeyCode.A))
@@ -57,6 +62,7 @@ public class Movement : MonoBehaviour
         }
     }
 
+    //Apply force and play S/Vfxs
     private void StartThrusting()
     {
         rb.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
@@ -70,12 +76,14 @@ public class Movement : MonoBehaviour
         }
     }
 
+    //Stop s/vfxs
     private void StopThrusting()
     {
         myAudioSource.Stop();
         mainEngineParticles.Stop();
     }
 
+    //Apply rotation and play vfx
     private void RotateLeft()
     {
         ApplyRotation(rotatationThrust);
@@ -85,6 +93,7 @@ public class Movement : MonoBehaviour
         }
     }
 
+    //Apply rotation and play vfx
     private void RotateRight()
     {
         ApplyRotation(-rotatationThrust);
@@ -94,12 +103,14 @@ public class Movement : MonoBehaviour
         }
     }
 
+    //Stop s/vfxs
     private void StopRotating()
     {
         rightThrusterParticles.Stop();
         leftThrusterParticles.Stop();
     }
 
+    //Apply smooth rotation to rocket
     private void ApplyRotation(float rotationThisFrame)
     {
         rb.freezeRotation = true; //freezing rotation so we can manually rotate
